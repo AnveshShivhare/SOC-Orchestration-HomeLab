@@ -195,6 +195,15 @@ To simulate credential harvesting and LSASS memory access anomalies, a localized
 - Technique: OS Credential Dumping — LSASS Memory (T1003.001)
 - Detection: Sysmon Event ID 10 (ProcessAccess targeting lsass.exe)
 
+**Splunk Detection Query**
+```spl
+index=windows sourcetype="WinEventLog:Microsoft-Windows-Sysmon/Operational"
+EventCode=10 TargetImage="*lsass.exe"
+(GrantedAccess=0x1010 OR GrantedAccess=0x1038 OR GrantedAccess=0x143A)
+| table _time, SourceImage, TargetImage, GrantedAccess, CallTrace
+```
+*Key: GrantedAccess 0x1010 = PROCESS_VM_READ — legitimate processes rarely require this against LSASS*
+
 ### Execution Target 2: Malicious PowerShell Stager Payload
 To simulate initial access payloads or command-and-control (C2) persistence tradecraft, an obfuscated Base64 stager connection was triggered:
 
@@ -211,6 +220,16 @@ powershell.exe -nop -w hidden -enc aWV4IChOZXctT2JqZWN0IE5ldC5XZWJDbGllbnQpLkRvd
 - Technique: Command and Scripting Interpreter — PowerShell (T1059.001), Obfuscated Files or Information (T1027)
 - Detection: Sysmon Event ID 1 (encoded command parameter), Event ID 3 (outbound C2 connection)
 ---
+
+**Splunk Detection Query**
+```spl
+index=windows sourcetype="WinEventLog:Microsoft-Windows-Sysmon/Operational"
+EventCode=1 Image="*powershell.exe"
+(CommandLine="* -EncodedCommand *" OR CommandLine="* -enc *")
+| table _time, ParentImage, Image, CommandLine, User
+```
+*High-fidelity variant: filter ParentImage for Office applications (WINWORD.exe, EXCEL.exe, 
+outlook.exe) — PowerShell spawned from Office is near-certain phishing/macro execution.*
 
 ## 📊 Verification Lifecycle Proof
 The execution of the attacks successfully validates the structural engineering of the SOC data stream pipeline across every node layer:
