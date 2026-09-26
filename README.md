@@ -1,13 +1,13 @@
 # Unified SOC Automation & Incident Response Lab
 
-## 📌 Project Overview
+## Project Overview
 This project details the architectural design, deployment, and optimization of an enterprise-grade Security Operations Center (SOC) sandbox environment. Built entirely within a virtualized infrastructure, the objective of this lab is to establish an end-to-end telemetry pipeline: capturing high-fidelity endpoint events, parsing them through a centralized Security Information and Event Management (SIEM) system, orchestrating alerts via a SOAR platform, and managing incident lifecycles within an automated Case Management system.
 
 A primary engineering milestone of this project was the **optimization and custom resource constraint tuning** of heavy Java-based enterprise platforms (Elasticsearch, Cassandra, OpenSearch) to seamlessly co-exist and function smoothly on a single, resource-restricted virtualization workstation without degrading stability or causing kernel-level resource starvation.
 
 ---
 
-## 🏗️ Architectural Topology & Cross-Component Integration
+## Architectural Topology & Cross-Component Integration
 The power of this lab lies in the precise communication logic binding individual isolated components into a unified defense architecture.
 
 ```
@@ -52,7 +52,7 @@ Once Shuffle processes and enriches the incoming JSON webhook structure, it conv
 
 ---
 
-## 🌐 Network Architecture & Port Forwarding Blueprint
+## Network Architecture & Port Forwarding Blueprint
 To facilitate administration, development, and dashboard access from the physical host machine while keeping the core infrastructure isolated inside a VirtualBox custom NAT Network (`10.0.2.0/24`), explicit Layer 4 port forwarding rule sets were engineered. Traffic hitting the physical host loopback interface (`127.0.0.1`) is programmatically translated and routed to the corresponding internal guest nodes as follows:
 
 | Service Target | Protocol | Host Inbound IP | Host Port | Target Guest IP | Target Guest Port | Purpose |
@@ -66,7 +66,7 @@ To facilitate administration, development, and dashboard access from the physica
 
 ---
 
-## 🛠️ Technology Stack & Credits
+## Technology Stack & Credits
 * **Hypervisor:** Oracle VirtualBox
 * **Endpoint Telemetry:** Microsoft Windows 10 Pro + SwiftOnSecurity Sysmon Configuration
   * *Credit:* Advanced endpoint auditing utilizes the community-vetted, production-hardened `sysmonconfig.xml` framework maintained by [SwiftOnSecurity GitHub Repository](https://github.com/SwiftOnSecurity/sysmonconfig).
@@ -76,7 +76,7 @@ To facilitate administration, development, and dashboard access from the physica
 
 ---
 
-## ⚙️ Memory Optimization & Resource Engineering
+## Memory Optimization & Resource Engineering
 Deploying enterprise application stacks on a localized, single-workstation environment presents significant memory constraints. By default, production-grade databases scale aggressively, which can lead to host starvation and kernel-level Linux Out-of-Memory (OOM) actions.
 
 The following architectural modifications and "diets" were engineered into the environment to maintain operational stability.
@@ -137,7 +137,7 @@ To safeguard host workstation stability, hypervisor settings were modified to th
 
 ---
 
-## 🚀 Step-by-Step Deployment Walkthrough
+## Step-by-Step Deployment Walkthrough
 
 ### Phase 1: Local Endpoint Instrumentation
 
@@ -180,7 +180,7 @@ To safeguard host workstation stability, hypervisor settings were modified to th
 
 ---
 
-## ⚔️ Adversary Simulation & Validation
+## Adversary Simulation & Validation
 To test the security monitoring, detection, automation, and alerting capability of our pipeline, multi-staged adversary attack scripts were simulated on the Windows 10 victim node.
 
 ### Execution Target 1: Credential Dumping via Mimikatz
@@ -231,14 +231,14 @@ EventCode=1 Image="*powershell.exe"
 *High-fidelity variant: filter ParentImage for Office applications (WINWORD.exe, EXCEL.exe, 
 outlook.exe) — PowerShell spawned from Office is near-certain phishing/macro execution.*
 
-## 📊 Verification Lifecycle Proof
+## Verification Lifecycle Proof
 The execution of the attacks successfully validates the structural engineering of the SOC data stream pipeline across every node layer:
 
 * **Detection Validation:** Wazuh consumes the high-fidelity Event Channel telemetry logs and successfully cross-matches signature criteria against pre-built rulesets, generating Tier-1 alerts on the indexer dashboard.
 * **Orchestration Validation:** The Wazuh Manager issues a secure Webhook out to Shuffle SOAR containing the raw JSON document structure of the active alert.
 * **Case Generation Validation:** Shuffle intercepts the payload data, strips out environmental white-noise parameters, executes automated alert enrichment steps, and runs a programmatic POST request out to TheHive API, successfully publishing an active incident response investigation ticket.
 
-## 📚 References & Acknowledgements
+## References & Acknowledgements
 Building a comprehensive SOC from scratch requires standing on the shoulders of the cybersecurity community. This infrastructure and deployment methodology was heavily inspired by the following educational resources:
 
 * **[MYDFIR]**: The core architectural inspiration and deployment sequence for integrating Wazuh, TheHive, and Shuffle was guided by their exceptional SOC analyst home lab series. [View the YouTube Playlist Here](https://youtu.be/ahrSFdiWzis?si=w8iXCjyjIPOU-0U6)
